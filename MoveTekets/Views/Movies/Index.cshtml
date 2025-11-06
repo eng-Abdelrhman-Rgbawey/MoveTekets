@@ -1,0 +1,278 @@
+﻿@using WebApplication1.Models
+@model IEnumerable<Move>
+@{
+    ViewData["Title"] = "Movies List";
+}
+
+<div class="movies-page bg-dark text-light py-5">
+    <div class="container">
+        <!-- Header -->
+        <div class="d-flex justify-content-between align-items-center mb-4">
+            <h2 class="display-6 fw-bold mb-0">
+                <i class="bi bi-film"></i>
+                Cinema Movies Collection
+            </h2>
+            @* <a asp-action="Create" class="btn btn-outline-light">
+                <i class="bi bi-plus-circle"></i> Add Movie
+            </a> *@
+            <a asp-action="Create" class="btn btn-add-movie">
+                <i class="bi bi-plus-circle"></i> Add Movie
+            </a>
+
+        </div>
+
+        <!-- Movies Grid -->
+        <div class="row g-4">
+            @foreach (var item in Model)
+            {
+                var rating = Math.Round(3.5 + ((item.Id % 15) / 10.0), 1);
+                var fullStars = (int)Math.Floor(rating);
+                var hasHalf = (rating - fullStars) >= 0.5;
+
+                <div class="col-lg-4 col-md-6">
+                    <div class="card movie-card h-100 text-light">
+                        <!-- Poster -->
+                        <div class="poster-wrap">
+                            <img src="@item.ImageURL" alt="@item.Name" class="poster img-fluid" loading="lazy" />
+                            <div class="poster-overlay d-flex flex-column justify-content-between p-3">
+                                <div class="d-flex justify-content-between align-items-start">
+                                    <span class="badge bg-danger shadow-sm">New</span>
+                                    <a asp-action="Edit" asp-route-id="@item.Id" class="btn btn-sm btn-outline-warning">
+                                        <i class="bi bi-pencil-square"></i>
+                                    </a>
+                                </div>
+
+                                <div class="d-flex justify-content-between align-items-end mt-2">
+                                    <div class="price-badge">
+                                        <span class="badge bg-dark text-success border border-2 border-success px-3 py-2 shadow">
+                                            <i class="bi bi-currency-dollar"></i> @item.Price.ToString("0.00")
+                                        </span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Rating -->
+                        <div class="rating text-warning mt-2">
+                            @for (int s = 1; s <= 5; s++)
+                            {
+                                if (s <= fullStars)
+                                {
+                                    <i class="bi bi-star-fill"></i>
+                                }
+                                else if (s == fullStars + 1 && hasHalf)
+                                {
+                                    <i class="bi bi-star-half"></i>
+                                }
+                                else
+                                {
+                                    <i class="bi bi-star"></i>
+                                }
+                            }
+                            <span class="ms-2 small text-white-50">@rating.ToString("0.0")</span>
+                        </div>
+
+                        <!-- Card Body -->
+                        <div class="card-body bg-black bg-opacity-25">
+                            <h5 class="card-title fw-bold">@item.Name</h5>
+                            <p class="text-muted description-limit">@item.Description</p>
+
+                            <div class="meta d-flex flex-wrap gap-2 mt-2">
+                                <span class="small text-white-50"><b>Cinema:</b> @(item.Cinema?.Name ?? "N/A")</span>
+                                <span class="small text-white-50"><b>Category:</b> @item.MovieCategory</span>
+                                <span class="small text-white-50"><b>Dates:</b> @item.StartDate.ToString("dd MMM yy") - @item.EndDate.ToString("dd MMM yy")</span>
+                            </div>
+
+                            <div class="mt-3 d-flex justify-content-between align-items-center">
+                                <div>
+                                    @if (DateTime.Now >= item.StartDate && DateTime.Now <= item.EndDate)
+                                    {
+                                        <span class="badge bg-success">AVAILABLE</span>
+                                    }
+                                    else if (DateTime.Now > item.EndDate)
+                                    {
+                                        <span class="badge bg-danger">EXPIRED</span>
+                                    }
+                                    else
+                                    {
+                                        <span class="badge bg-primary">UPCOMING</span>
+                                    }
+                                </div>
+
+                                <div class="btns">
+                                    <a asp-action="Details" asp-route-id="@item.Id" class="btn btn-outline-light btn-sm me-2">
+                                        <i class="bi bi-eye-fill"></i> Details
+                                    </a>
+                                    <a class="btn btn-gradient btn-sm text-white">
+                                        <i class="bi bi-cart-plus"></i> Add • @item.Price.ToString("c")
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+            }
+        </div>
+    </div>
+</div>
+
+<style>
+    /* ===== Page base ===== */
+    .movies-page {
+        background: linear-gradient(180deg, #0b0b0c 0%, #0f1113 100%);
+        min-height: 100vh;
+        font-family: "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+    }
+
+    .btn-add-movie {
+        background-color: #ffbf00; /* اللون الأخضر/أصفر المستخدم */
+        color: #000; /* نص أسود */
+        border: none;
+        padding: 0.45rem 0.8rem;
+        border-radius: 8px;
+        font-weight: 600;
+        display: inline-flex;
+        align-items: center;
+        gap: 4px; /* مسافة بين الأيقونة والنص */
+        transition: transform 0.3s ease, box-shadow 0.3s ease;
+    }
+
+        .btn-add-movie:hover {
+            color: #000; /* نص أسود */
+            background-color: #ffd633; /* أصفر فاتح عند hover */
+            transform: translateY(-2px);
+            box-shadow: 0 6px 16px rgba(255, 191, 0, 0.5);
+        }
+
+
+    /* ===== Card ===== */
+    .movie-card {
+        border-radius: 12px;
+        overflow: hidden;
+        background: linear-gradient(180deg, rgba(10,10,10,0.45), rgba(6,6,6,0.6));
+        transition: transform .35s cubic-bezier(.2,.8,.2,1), box-shadow .35s;
+        border: 0.5px solid #ffbf00; /* إطار أصفر */
+    }
+
+        .movie-card:hover {
+            @* transform: translateY(-10px);
+            box-shadow: 0 25px 60px rgba(0,0,0,0.6), 0 6px 18px rgba(13,110,253,0.12);
+            border-color: #ffd633; /* أصفر فاتح عند hover */ *@
+
+            transform: translateY(-10px);
+            box-shadow: 0 25px 60px rgba(0, 123, 255, 0.8), /* ظل أزرق قوي */
+            0 6px 18px rgba(0, 191, 255, 0.6); /* ظل أزرق فاتح */
+            border-color: #ffd633; /* لو حابب تخلي الإطار يتغير عند hover */
+        }
+
+    /* Poster */
+    .poster-wrap {
+        position: relative;
+        height: 320px;
+        background: #0a0a0a;
+        display: block;
+        overflow: hidden;
+    }
+
+    .poster {
+        width: 100%;
+        height: 100%;
+        object-fit: contain;
+        background: linear-gradient(90deg, rgba(0,0,0,0.25), rgba(0,0,0,0.25));
+        transition: transform .6s ease;
+        display: block;
+    }
+
+    .movie-card:hover .poster {
+        transform: scale(1.04) translateY(-2px);
+    }
+
+    /* Poster overlay */
+    .poster-overlay {
+        position: absolute;
+        inset: 0;
+        display: flex;
+        flex-direction: column;
+        justify-content: flex-end;
+        pointer-events: none;
+    }
+
+        .poster-overlay .btn {
+            pointer-events: auto;
+        }
+
+        .poster-overlay .rating i {
+            font-size: 1.05rem;
+            margin-right: 2px;
+            color: #ffbf00;
+        }
+
+        .rating{
+            margin-left: 15px;
+        }
+        .poster-overlay .price-badge .badge {
+            font-weight: 600;
+        }
+
+    /* Card body text */
+    .description-limit {
+        color: #d0d6dd;
+        display: -webkit-box;
+        -webkit-line-clamp: 3;
+        -webkit-box-orient: vertical;
+        overflow: hidden;
+    }
+
+    .meta span {
+        margin-right: .6rem;
+        color: #99a1ab;
+    }
+
+    /* Buttons */
+    .btn-gradient {
+        background: linear-gradient(90deg, #ff7a18 0%, #ff0066 100%);
+        border: none;
+        padding: .45rem .7rem;
+        border-radius: 8px;
+        box-shadow: 0 6px 18px rgba(255, 0, 102, 0.12);
+    }
+
+    .btn-outline-light {
+        border-color: rgba(255,255,255,0.12);
+        color: #fff;
+    }
+
+    /* Card Title */
+    .card-title {
+        font-size: 1.05rem;
+        color: #fff;
+        margin-bottom: .4rem;
+    }
+
+    /* زيادة المسافة بين الصفوف */
+    .row.g-4 > .col-lg-4,
+    .row.g-4 > .col-md-6 {
+        margin-bottom: 2.5rem;
+    }
+
+    /* Responsive adjustments */
+    @* @media (max-width: 767px) {
+        .poster-wrap
+
+    {
+        height: 220px;
+    }
+
+    }
+
+    @media (min-width: 768px) and (max-width: 991px) {
+        .poster-wrap
+
+    {
+        height: 280px;
+    }
+
+    } *@
+    
+</style>

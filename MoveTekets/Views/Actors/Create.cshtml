@@ -1,0 +1,134 @@
+﻿@* @using WebApplication1.Models
+@model Actor
+@{
+    ViewData["Title"] = "Create Actor";
+}
+<style>
+    .img-preview {
+        width: 160px;
+        height: 160px;
+        border-radius: 50%;
+        border: 2px solid #ccc;
+        object-fit: cover;
+        display: block;
+        margin: 0 auto 15px auto;
+        background-color: #f8f8f8;
+    }
+
+</style>
+<div class="row text">
+    <div class="col-md-8 offset-2">
+        <h1 class="text-center mb-4" style="color:gold">Add New Actor</h1>
+
+        <div class="card shadow p-4">
+            <form asp-action="Create">
+                <div asp-validation-summary="ModelOnly" class="text-danger mb-3"></div>
+
+                <div class="form-group text-center mb-3">
+                    <img id="ProfilePicturepreview" class="img-preview" />
+                </div>
+
+                <div class="form-group mb-3">
+                    <label asp-for="ProfilePicture" class="control-label"></label>
+                    <input asp-for="ProfilePicture" class="form-control" id="ProfilePicture" />
+                    <span asp-validation-for="ProfilePicture" class="text-danger"></span>
+                </div>
+
+                <div class="form-group mb-3">
+                    <label asp-for="FullName" class="control-label"></label>
+                    <input asp-for="FullName" class="form-control" />
+                    <span asp-validation-for="FullName" class="text-danger"></span>
+                </div>
+
+                <div class="form-group mb-4">
+                    <label asp-for="Bio" class="control-label"></label>
+                    <textarea asp-for="Bio" class="form-control" rows="4"></textarea>
+                    <span asp-validation-for="Bio" class="text-danger"></span>
+                </div>
+
+                <div class="form-group d-flex justify-content-between">
+                    <a class="btn btn-outline-secondary" asp-action="Index">Show All</a>
+                    <input type="submit" value="Create" class="btn btn-success" />
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <script>
+        document.getElementById("ProfilePicture").addEventListener("input", function () {
+            var output = document.getElementById("ProfilePicturepreview");
+            output.src = this.value;
+        });
+    </script>
+} *@
+
+@model WebApplication1.Models.Actor
+@{
+    ViewData["Title"] = "Create Actor";
+}
+<style>
+    .img-preview {
+        width: 160px;
+        height: 160px;
+        border-radius: 50%;
+        border: 2px solid #ccc;
+        object-fit: cover; /* مهم جدا لتصغير الصورة داخل الإطار */
+        display: block;
+        margin: 0 auto 15px auto;
+        background-color: #f8f8f8;
+    }
+</style>
+
+<div class="row">
+    <div class="col-md-8 offset-2">
+        <h2 class="text-center mb-4" style="color:gold;">Add New Actor</h2>
+
+        <form asp-action="Create" enctype="multipart/form-data">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+
+            <div class="form-group text-center mb-3">
+                <img id="ProfilePicturepreview" class="img-preview" />
+            </div>
+
+            <div class="form-group mb-3">
+                <label asp-for="ProfilePicture" class="control-label"></label>
+                <input asp-for="ProfilePicture" type="file" class="form-control" accept="image/*" id="ProfilePicture" />
+                <span asp-validation-for="ProfilePicture" class="text-danger"></span>
+            </div>
+
+            <div class="form-group mb-3">
+                <label asp-for="FullName" class="control-label"></label>
+                <input asp-for="FullName" class="form-control" />
+                <span asp-validation-for="FullName" class="text-danger"></span>
+            </div>
+
+            <div class="form-group mb-3">
+                <label asp-for="Bio" class="control-label"></label>
+                <input asp-for="Bio" class="form-control" />
+                <span asp-validation-for="Bio" class="text-danger"></span>
+            </div>
+
+            <div class="form-group text-right">
+                <input type="submit" value="Create" class="btn btn-outline-success" />
+                <a asp-action="Index" class="btn btn-outline-secondary">Show All</a>
+            </div>
+        </form>
+    </div>
+</div>
+
+@section Scripts {
+    <script>
+        document.getElementById("ProfilePicture").addEventListener("change", function (event) {
+            const file = event.target.files[0];
+            if (file) {
+                const reader = new FileReader();
+                reader.onload = function (e) {
+                    document.getElementById("ProfilePicturepreview").src = e.target.result;
+                };
+                reader.readAsDataURL(file);
+            }
+        });
+    </script>
+}
