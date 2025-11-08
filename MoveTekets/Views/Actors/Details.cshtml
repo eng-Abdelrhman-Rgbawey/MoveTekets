@@ -1,0 +1,76 @@
+﻿@model WebApplication1.Models.Actor
+@{
+    ViewData["Title"] = "Actor Details";
+}
+<style>
+    .img-preview {
+        width: 160px;
+        height: 160px;
+        border-radius: 50%;
+        border: 2px solid #ccc;
+        object-fit: cover;
+        display: block;
+        margin: 0 auto 15px auto;
+        background-color: #f8f8f8;
+    }
+
+    label {
+        color: #ffbf00;
+    }
+</style>
+
+<div class="row">
+    <div class="col-md-8 offset-2">
+        <h2 class="text-center mb-4" style="color:gold;">Details for @Model.FullName</h2>
+
+            @* @Html.AntiForgeryToken() *@
+
+            <div class="form-group text-center mb-3">
+
+            <img id="ProfilePicturepreview"
+                 src="@(Model.ProfilePicture ?? "https://via.placeholder.com/160?text=Profile+Picture")"
+                 style="width:160px; height:160px; object-fit:cover; border-radius:50%;" />
+
+            </div>
+
+            <div class="form-group mb-3">
+                <label asp-for="ProfilePictureFile" class="control-label"></label>
+                <input asp-for="ProfilePictureFile" type="file" class="form-control" accept="image/*" id="ProfilePicture" readonly/>
+                <span asp-validation-for="ProfilePictureFile" class="text-danger"></span>
+            </div>
+
+            <div class="form-group mb-3">
+                <label asp-for="FullName" class="control-label"></label>
+                <input asp-for="FullName" class="form-control" readonly/>
+                <span asp-validation-for="FullName" class="text-danger"></span>
+            </div>
+
+            <div class="form-group mb-3">
+                <label asp-for="Bio" class="control-label"></label>
+                <textarea asp-for="Bio" class="form-control" rows="4" readonly></textarea>
+                <span asp-validation-for="Bio" class="text-danger"></span>
+            </div>
+
+            <div class="form-group text-right">
+            <a class="btn btn-outline-success float-right" asp-action="Edit" asp-route-id="@Model.id">
+                <i class="bi bi-pencil"></i> Edit
+            </a>
+            <a asp-action="Index" class="btn btn-outline-secondary">Show All</a>
+            </div>
+    </div>
+</div>
+
+@section Scripts {
+    <script>
+        document.getElementById("ProfilePicture").addEventListener("change", function (event) {
+            const file = event.target.files[0];
+            if (file) {
+                const reader = new FileReader();
+                reader.onload = function (e) {
+                    document.getElementById("ProfilePicturepreview").src = e.target.result;
+                };
+                reader.readAsDataURL(file);
+            }
+        });
+    </script>
+}
