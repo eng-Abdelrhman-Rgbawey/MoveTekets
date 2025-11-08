@@ -20,6 +20,7 @@ namespace MoveTekets
             // Add interface services
             builder.Services.AddScoped<IActorsService, ActorsService>();
             builder.Services.AddScoped<IproducerService, ProducerServicw>();
+            builder.Services.AddScoped<IcinemaServices, CinemaService>();
 
 
             var app = builder.Build();

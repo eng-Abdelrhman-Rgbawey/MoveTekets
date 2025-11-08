@@ -3,7 +3,7 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace WebApplication1.Models
 {
-    public class Cinema
+    public class Cinema : IEntityBase
     {
         public int id { get; set; }
         public string? Logo { get; set; }
@@ -23,7 +23,7 @@ namespace WebApplication1.Models
         public string Description { get; set; }
 
         // Relationships
-        public List<Move> Moves { get; set; }
+        public List<Move>? Moves { get; set; }
 
     }
 }
