@@ -1,0 +1,188 @@
+﻿@model WebApplication1.Models.Move
+
+@{
+    ViewData["Title"] = "Movie Details";
+}
+
+<div class="container py-5 text-light">
+    <div class="row justify-content-center">
+        <div class="col-lg-10">
+            <div class="card movie-card h-100 text-light shadow-lg p-3">
+                <div class="row g-4 align-items-center">
+                    <!-- صورة الفيلم -->
+                    <div class="col-md-5">
+                        <div class="poster-wrap rounded">
+                            <img src="@(Model.ImageURL ?? "https://via.placeholder.com/500x650?text=No+Image")"
+                                 alt="@Model.Name" class="poster img-fluid rounded" />
+                            <div class="poster-overlay p-2 d-flex justify-content-start align-items-start flex-column">
+                                <span class="badge bg-warning text-dark fw-bold shadow-sm">Category: @Model.MovieCategory</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- تفاصيل الفيلم -->
+                    <div class="col-md-7">
+                        <h2 class="card-title fw-bold display-6 mb-3">@Model.Name</h2>
+                        <p class="text-warning lead mb-4">@Model.Description</p>
+
+                        <!-- Meta Info -->
+                        <div class="row mb-3">
+                            <!-- Cinema -->
+                            <div class="col-12 mb-3">
+                                <span class="fw-bold text-white-50">Cinema:</span>
+                                <div class="d-flex flex-wrap gap-3 mt-2">
+                                    <a asp-controller="Cinema" asp-action="Details" asp-route-id="@Model.CinemaId" class="card-mini text-decoration-none">
+                                        <img src="@(Model.Cinema?.Logo ?? "https://via.placeholder.com/60x60?text=C")"
+                                             alt="@Model.Cinema?.Name" class="rounded-circle mb-2" width="60" height="60" />
+                                        <span class="text-white fw-semibold text-center d-block">@Model.Cinema?.Name</span>
+                                    </a>
+                                </div>
+                            </div>
+
+                            <!-- Producer -->
+                            <div class="col-12 mb-3">
+                                <span class="fw-bold text-white-50">Producer:</span>
+                                <div class="d-flex flex-wrap gap-3 mt-2">
+                                    <a asp-controller="Producer" asp-action="Details" asp-route-id="@Model.ProducerId" class="card-mini text-decoration-none">
+                                        <img src="@(Model.Producer?.ProfilePicture ?? "https://via.placeholder.com/60x60?text=P")"
+                                             alt="@Model.Producer?.FullName" class="rounded-circle mb-2" width="60" height="60" />
+                                        <span class="text-white fw-semibold text-center d-block">@Model.Producer?.FullName</span>
+                                    </a>
+                                </div>
+                            </div>
+
+                            <!-- Actors -->
+                            <div class="mb-4">
+                                <span class="fw-bold text-white-50">Actors:</span>
+                                <div class="d-flex flex-wrap gap-3 mt-2">
+                                    @foreach (var actorMovie in Model.ActorMovies)
+                                    {
+                                        <a asp-controller="Actors" asp-action="Details" asp-route-id="@actorMovie.ActorId" class="card-mini text-decoration-none">
+                                            <img src="@(actorMovie.Actor.ProfilePicture ?? "https://via.placeholder.com/60x60?text=A")"
+                                                 alt="@actorMovie.Actor.FullName" class="rounded-circle mb-2" width="60" height="60" />
+                                            <span class="text-white fw-semibold text-center d-block">@actorMovie.Actor.FullName</span>
+                                        </a>
+                                    }
+                                </div>
+                            </div>
+
+
+                            <!-- Dates -->
+                            <div class="col-6 mb-2">
+                                <span class="fw-bold text-white-50">Dates:</span>
+                                <span class="text-white">@Model.StartDate.ToString("dd MMM yy") - @Model.EndDate.ToString("dd MMM yy")</span>
+                            </div>
+
+                            <!-- Price -->
+                            <div class="col-6 mb-2">
+                                <span class="fw-bold text-white-50">Price:</span>
+                                <span class="badge bg-success fw-bold fs-6 shadow-sm">@Model.Price.ToString("c")</span>
+                            </div>
+                        </div>
+
+
+                        <!-- Status + Back Button -->
+                        <div class="d-flex justify-content-between align-items-center mt-4">
+                            <div>
+                                @if (DateTime.Now >= Model.StartDate && DateTime.Now <= Model.EndDate)
+                                {
+                                    <span class="badge bg-success fs-6 shadow-sm">AVAILABLE</span>
+                                }
+                                else if (DateTime.Now > Model.EndDate)
+                                {
+                                    <span class="badge bg-danger fs-6 shadow-sm">EXPIRED</span>
+                                }
+                                else
+                                {
+                                    <span class="badge bg-primary fs-6 shadow-sm">UPCOMING</span>
+                                }
+                            </div>
+                            <a asp-action="Index" class="btn btn-outline-light btn-lg">
+                                <i class="bi bi-arrow-left-circle"></i> Back to Movies
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+    /* ===== Poster ===== */
+    .poster-wrap {
+        height: 100%;
+        overflow: hidden;
+        border-radius: 12px;
+        position: relative;
+    }
+
+    .poster {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        transition: transform 0.6s ease;
+    }
+
+    .poster-wrap:hover .poster {
+        transform: scale(1.05) translateY(-5px);
+    }
+
+    .poster-overlay {
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        display: flex;
+        flex-direction: column;
+        justify-content: space-between;
+        pointer-events: none;
+    }
+
+    /* ===== Card ===== */
+    .movie-card {
+        background: linear-gradient(180deg, rgba(10,10,10,0.8), rgba(5,5,5,0.8));
+        border-radius: 15px;
+        border: 0.5px solid #ffbf00;
+        transition: transform 0.3s ease, box-shadow 0.3s ease;
+    }
+
+        .movie-card:hover {
+            transform: translateY(-8px);
+            box-shadow: 0 25px 60px rgba(0,123,255,0.7), 0 6px 18px rgba(0,191,255,0.6);
+            border-color: #ffd633;
+        }
+
+    /* ===== Text Styles ===== */
+    .card-title {
+        font-size: 30px;
+        font-weight: 700;
+        color: #ffbf00;
+    }
+
+    /* ===== Mini Cards for Actors, Producer, Cinema ===== */
+    .card-mini {
+        background: rgba(255,255,255,0.05);
+        border-radius: 12px;
+        padding: 0.5rem 0.75rem;
+        text-align: center;
+        width: 100px;
+        transition: transform 0.3s ease, box-shadow 0.3s ease;
+    }
+
+        .card-mini:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 20px rgba(0,123,255,0.5);
+        }
+
+        .card-mini img {
+            object-fit: cover;
+        }
+
+    /* ===== Badges ===== */
+    .badge {
+        padding: 0.5rem 0.75rem;
+        font-size: 0.9rem;
+        border-radius: 8px;
+    }
+</style>

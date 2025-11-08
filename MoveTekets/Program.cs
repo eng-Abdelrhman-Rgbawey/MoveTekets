@@ -21,6 +21,7 @@ namespace MoveTekets
             builder.Services.AddScoped<IActorsService, ActorsService>();
             builder.Services.AddScoped<IproducerService, ProducerServicw>();
             builder.Services.AddScoped<IcinemaServices, CinemaService>();
+            builder.Services.AddScoped<ImoveServices, MovieServices>();
 
 
             var app = builder.Build();
