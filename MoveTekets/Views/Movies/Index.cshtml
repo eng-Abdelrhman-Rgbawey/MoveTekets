@@ -126,21 +126,21 @@
     }
 
     .btn-add-movie {
-        background-color: #ffbf00; /* اللون الأخضر/أصفر المستخدم */
-        color: #000; /* نص أسود */
+        background-color: #ffbf00; 
+        color: #000; 
         border: none;
         padding: 0.45rem 0.8rem;
         border-radius: 8px;
         font-weight: 600;
         display: inline-flex;
         align-items: center;
-        gap: 4px; /* مسافة بين الأيقونة والنص */
+        gap: 4px; 
         transition: transform 0.3s ease, box-shadow 0.3s ease;
     }
 
         .btn-add-movie:hover {
-            color: #000; /* نص أسود */
-            background-color: #ffd633; /* أصفر فاتح عند hover */
+            color: #000;
+            background-color: #ffd633; 
             transform: translateY(-2px);
             box-shadow: 0 6px 16px rgba(255, 191, 0, 0.5);
         }
@@ -152,13 +152,9 @@
         overflow: hidden;
         background: linear-gradient(180deg, rgba(10,10,10,0.45), rgba(6,6,6,0.6));
         transition: transform .35s cubic-bezier(.2,.8,.2,1), box-shadow .35s;
-        border: 0.5px solid #ffbf00; /* إطار أصفر */
-    }
+        border: 0.5px solid #ffbf00; 
 
         .movie-card:hover {
-            @* transform: translateY(-10px);
-            box-shadow: 0 25px 60px rgba(0,0,0,0.6), 0 6px 18px rgba(13,110,253,0.12);
-            border-color: #ffd633; /* أصفر فاتح عند hover */ *@
 
             transform: translateY(-10px);
             box-shadow: 0 25px 60px rgba(0, 123, 255, 0.8), /* ظل أزرق قوي */
@@ -250,29 +246,8 @@
         margin-bottom: .4rem;
     }
 
-    /* زيادة المسافة بين الصفوف */
     .row.g-4 > .col-lg-4,
     .row.g-4 > .col-md-6 {
         margin-bottom: 2.5rem;
-    }
-
-    /* Responsive adjustments */
-    @* @media (max-width: 767px) {
-        .poster-wrap
-
-    {
-        height: 220px;
-    }
-
-    }
-
-    @media (min-width: 768px) and (max-width: 991px) {
-        .poster-wrap
-
-    {
-        height: 280px;
-    }
-
-    } *@
-    
+    } 
 </style>
